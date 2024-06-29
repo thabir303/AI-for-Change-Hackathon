@@ -8,6 +8,10 @@ function Weather() {
   const [error, setError] = useState('');
 
   const fetchWeather = async () => {
+    if (!lat || !lon) {
+      setError('Latitude and Longitude are required');
+      return;
+    }
     try {
       const response = await axios.get(`http://localhost:5000/api/weather?lat=${lat}&lon=${lon}`);
       setData(response.data);
@@ -33,6 +37,7 @@ function Weather() {
         placeholder="Enter longitude"
       />
       <button onClick={fetchWeather}>Search</button>
+      {error && <p className="error">{error}</p>}
       {data && (
         <div className="data-info">
           <h2>{data.weather.city}</h2>
@@ -48,9 +53,11 @@ function Weather() {
           <p>PM2.5: {data.airPollution.pm2_5} μg/m³</p>
           <p>PM10: {data.airPollution.pm10} μg/m³</p>
           <p>NH3: {data.airPollution.nh3} μg/m³</p>
+          <h3>Soil Data</h3>
+          <p>Soil Moisture: {data.soil.moisture} %</p>
+          <p>Soil Temperature: {data.soil.temp} °C</p>
         </div>
       )}
-      {error && <p className="error">{error}</p>}
     </div>
   );
 }
