@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function App() {
+function Gemini() {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
 
@@ -41,4 +41,4 @@ function App() {
   );
 }
 
-export default App;
+export default Gemini;

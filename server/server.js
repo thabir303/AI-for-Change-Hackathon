@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const geminiRoutes = require('./routes/gemini');
+const weatherRoutes = require('./routes/weatherRoutes');
+const errorHandler = require('./middlewares/errorHandler');
+
 const cors = require('cors'); // Import cors
 
 
@@ -17,6 +20,8 @@ app.get('/', async (req, res) => {
 });
 
 app.use("/api/gemini", geminiRoutes);
+app.use('/api/weather', weatherRoutes);
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
