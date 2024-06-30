@@ -116,7 +116,7 @@ const DescriptionPage = () => {
         <div className="soil-info">
           <h3>Soil Data</h3>
           <p>Moisture: {soil.moisture}</p>
-          <p>Temperature: {(soil.temp).toFixed(2)}°C</p>
+          <p>Temperature: {((soil.temp).toFixed(2)) - 273}°C</p>
         </div>
       )}
 
