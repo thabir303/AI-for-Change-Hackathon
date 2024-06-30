@@ -1,0 +1,221 @@
+const axios = require('axios');
+const express = require('express');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// const aqiBreakpoints = {
+//   co: [
+//     { low: 0, high: 4.4, C_low: 0, C_high: 4.4, I_low: 0, I_high: 50 },
+//     { low: 4.5, high: 9.4, C_low: 4.5, C_high: 9.4, I_low: 51, I_high: 100 },
+//     { low: 9.5, high: 12.4, C_low: 9.5, C_high: 12.4, I_low: 101, I_high: 150 },
+//     { low: 12.5, high: 15.4, C_low: 12.5, C_high: 15.4, I_low: 151, I_high: 200 },
+//     { low: 15.5, high: 30.4, C_low: 15.5, C_high: 30.4, I_low: 201, I_high: 300 },
+//     { low: 30.5, high: 40.4, C_low: 30.5, C_high: 40.4, I_low: 301, I_high: 400 },
+//     { low: 40.5, high: 50.4, C_low: 40.5, C_high: 50.4, I_low: 401, I_high: 500 },
+//     { low: 50.5, high: 100.4, C_low: 50.5, C_high: 100.4, I_low: 501, I_high: 600 },
+//     { low: 100.5, high: 150.4, C_low: 100.5, C_high: 150.4, I_low: 601, I_high: 700 },
+//     { low: 150.5, high: 200.4, C_low: 150.5, C_high: 200.4, I_low: 701, I_high: 800 },
+//     { low: 200.5, high: 300.4, C_low: 200.5, C_high: 300.4, I_low: 801, I_high: 900 },
+//     { low: 300.5, high: 400.4, C_low: 300.5, C_high: 400.4, I_low: 901, I_high: 1000 }
+//   ],
+//   no2: [
+//     { low: 0, high: 53, C_low: 0, C_high: 53, I_low: 0, I_high: 50 },
+//     { low: 54, high: 100, C_low: 54, C_high: 100, I_low: 51, I_high: 100 },
+//     { low: 101, high: 360, C_low: 101, C_high: 360, I_low: 101, I_high: 150 },
+//     { low: 361, high: 649, C_low: 361, C_high: 649, I_low: 151, I_high: 200 },
+//     { low: 650, high: 1249, C_low: 650, C_high: 1249, I_low: 201, I_high: 300 },
+//     { low: 1250, high: 1649, C_low: 1250, C_high: 1649, I_low: 301, I_high: 400 },
+//     { low: 1650, high: 2049, C_low: 1650, C_high: 2049, I_low: 401, I_high: 500 }
+//   ],
+//   o3: [
+//     { low: 0, high: 54, C_low: 0, C_high: 54, I_low: 0, I_high: 50 },
+//     { low: 55, high: 70, C_low: 55, C_high: 70, I_low: 51, I_high: 100 },
+//     { low: 71, high: 85, C_low: 71, C_high: 85, I_low: 101, I_high: 150 },
+//     { low: 86, high: 105, C_low: 86, C_high: 105, I_low: 151, I_high: 200 },
+//     { low: 106, high: 200, C_low: 106, C_high: 200, I_low: 201, I_high: 300 },
+//     { low: 201, high: 404, C_low: 201, C_high: 404, I_low: 301, I_high: 400 },
+//     { low: 405, high: 504, C_low: 405, C_high: 504, I_low: 401, I_high: 500 }
+//   ],
+//   pm2_5: [
+//     { low: 0, high: 12, C_low: 0, C_high: 12, I_low: 0, I_high: 50 },
+//     { low: 12.1, high: 35.4, C_low: 12.1, C_high: 35.4, I_low: 51, I_high: 100 },
+//     { low: 35.5, high: 55.4, C_low: 35.5, C_high: 55.4, I_low: 101, I_high: 150 },
+//     { low: 55.5, high: 150.4, C_low: 55.5, C_high: 150.4, I_low: 151, I_high: 200 },
+//     { low: 150.5, high: 250.4, C_low: 150.5, C_high: 250.4, I_low: 201, I_high: 300 },
+//     { low: 250.5, high: 350.4, C_low: 250.5, C_high: 350.4, I_low: 301, I_high: 400 },
+//     { low: 350.5, high: 500.4, C_low: 350.5, C_high: 500.4, I_low: 401, I_high: 500 }
+//   ],
+//   pm10: [
+//     { low: 0, high: 54, C_low: 0, C_high: 54, I_low: 0, I_high: 50 },
+//     { low: 55, high: 154, C_low: 55, C_high: 154, I_low: 51, I_high: 100 },
+//     { low: 155, high: 254, C_low: 155, C_high: 254, I_low: 101, I_high: 150 },
+//     { low: 255, high: 354, C_low: 255, C_high: 354, I_low: 151, I_high: 200 },
+//     { low: 355, high: 424, C_low: 355, C_high: 424, I_low: 201, I_high: 300 },
+//     { low: 425, high: 504, C_low: 425, C_high: 504, I_low: 301, I_high: 400 },
+//     { low: 505, high: 604, C_low: 505, C_high: 604, I_low: 401, I_high: 500 }
+//   ]
+// };
+
+// const calculateAQI = (concentration, breakpoints) => {
+//   for (let i = 0; i < breakpoints.length; i++) {
+//     const { low, high, C_low, C_high, I_low, I_high } = breakpoints[i];
+//     if (concentration >= low && concentration <= high) {
+//       return ((I_high - I_low) / (C_high - C_low)) * (concentration - C_low) + I_low;
+//     }
+//   }
+//   return null;
+// };
+
+
+const getAQIAndHealthRecommendations = (pollutants) => {
+  const aqiValues = {};
+  const healthRecommendations = [];
+  let mainPollutant = '';
+  let highestAQI = 0;
+
+  for (const [pollutant, value] of Object.entries(pollutants)) {
+    const breakpoints = aqiBreakpoints[pollutant];
+    if (breakpoints) {
+      const aqi = calculateAQI(value, breakpoints);
+      aqiValues[pollutant] = aqi;
+
+      if (aqi > highestAQI) {
+        highestAQI = aqi;
+        mainPollutant = pollutant;
+      }
+
+      if (aqi <= 50) {
+        healthRecommendations.push({ pollutant, aqi, level: 'Good', recommendation: 'Air quality is considered satisfactory, and air pollution poses little or no risk.' });
+      } else if (aqi <= 100) {
+        healthRecommendations.push({ pollutant, aqi, level: 'Moderate', recommendation: 'Air quality is acceptable; however, there may be some health concern for a very small number of people who are unusually sensitive to air pollution.' });
+      } else if (aqi <= 150) {
+        healthRecommendations.push({ pollutant, aqi, level: 'Unhealthy for Sensitive Groups', recommendation: 'Members of sensitive groups may experience health effects. The general public is not likely to be affected.' });
+      } else if (aqi <= 200) {
+        healthRecommendations.push({ pollutant, aqi, level: 'Unhealthy', recommendation: 'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.' });
+      } else if (aqi <= 300) {
+        healthRecommendations.push({ pollutant, aqi, level: 'Very Unhealthy', recommendation: 'Health alert: everyone may experience more serious health effects.' });
+      } else if (aqi <= 500) {
+        healthRecommendations.push({ pollutant, aqi, level: 'Hazardous', recommendation: 'Health warnings of emergency conditions. The entire population is more likely to be affected.' });
+      }
+    }
+  }
+
+  return { aqiValues, healthRecommendations, mainPollutant, highestAQI };
+};
+exports.getWeatherData = async (req, res, next) => {
+  const { lat, lon } = req.query;
+
+  if (!lat || !lon) {
+    return res.status(400).json({ message: 'Latitude and Longitude are required' });
+  }
+
+  try {
+    const openWeatherMapApiKey = process.env.OPENWEATHERMAP_API_KEY;
+    const googleApiKey = process.env.GOOGLE_API_KEY;
+
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${openWeatherMapApiKey}`;
+    const airPollutionUrl = `https://airquality.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}`;
+
+    const [weatherResponse, airPollutionResponse] = await Promise.all([
+      axios.get(weatherUrl),
+      axios.post(airPollutionUrl, {
+        location: {
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lon)
+        }
+      })
+    ]);
+
+    const weatherData = weatherResponse.data;
+    const airPollutionData = airPollutionResponse.data;
+
+    const currentPollutants = airPollutionData.currentConditions.pollutants;
+    const currentAQI = getAQIAndHealthRecommendations(currentPollutants);
+
+    res.json({
+      weather: {
+        city: weatherData.name,
+        temperature: weatherData.main.temp,
+        humidity: weatherData.main.humidity,
+        description: weatherData.weather[0].description
+      },
+      airPollution: currentPollutants,
+      currentAQI: currentAQI.aqiValues,
+      healthRecommendations: currentAQI.healthRecommendations,
+      mainPollutant: currentAQI.mainPollutant,
+      highestAQI: currentAQI.highestAQI
+    });
+  } catch (error) {
+    console.error('Error fetching weather data:', error.message);
+    next(error);
+  }
+};
+
+
+
+// const aqiBreakpoints = {
+//   co: [
+//     { low: 0, high: 4.4, C_low: 0, C_high: 4.4, I_low: 0, I_high: 50 },
+//     { low: 4.5, high: 9.4, C_low: 4.5, C_high: 9.4, I_low: 51, I_high: 100 },
+//     { low: 9.5, high: 12.4, C_low: 9.5, C_high: 12.4, I_low: 101, I_high: 150 },
+//     { low: 12.5, high: 15.4, C_low: 12.5, C_high: 15.4, I_low: 151, I_high: 200 },
+//     { low: 15.5, high: 30.4, C_low: 15.5, C_high: 30.4, I_low: 201, I_high: 300 },
+//     { low: 30.5, high: 40.4, C_low: 30.5, C_high: 40.4, I_low: 301, I_high: 400 },
+//     { low: 40.5, high: 50.4, C_low: 40.5, C_high: 50.4, I_low: 401, I_high: 500 },
+//     { low: 50.5, high: 100.4, C_low: 50.5, C_high: 100.4, I_low: 501, I_high: 600 },
+//     { low: 100.5, high: 150.4, C_low: 100.5, C_high: 150.4, I_low: 601, I_high: 700 },
+//     { low: 150.5, high: 200.4, C_low: 150.5, C_high: 200.4, I_low: 701, I_high: 800 },
+//     { low: 200.5, high: 300.4, C_low: 200.5, C_high: 300.4, I_low: 801, I_high: 900 },
+//     { low: 300.5, high: 400.4, C_low: 300.5, C_high: 400.4, I_low: 901, I_high: 1000 }
+//   ],
+//   no2: [
+//     { low: 0, high: 53, C_low: 0, C_high: 53, I_low: 0, I_high: 50 },
+//     { low: 54, high: 100, C_low: 54, C_high: 100, I_low: 51, I_high: 100 },
+//     { low: 101, high: 360, C_low: 101, C_high: 360, I_low: 101, I_high: 150 },
+//     { low: 361, high: 649, C_low: 361, C_high: 649, I_low: 151, I_high: 200 },
+//     { low: 650, high: 1249, C_low: 650, C_high: 1249, I_low: 201, I_high: 300 },
+//     { low: 1250, high: 1649, C_low: 1250, C_high: 1649, I_low: 301, I_high: 400 },
+//     { low: 1650, high: 2049, C_low: 1650, C_high: 2049, I_low: 401, I_high: 500 }
+//   ],
+//   o3: [
+//     { low: 0, high: 54, C_low: 0, C_high: 54, I_low: 0, I_high: 50 },
+//     { low: 55, high: 70, C_low: 55, C_high: 70, I_low: 51, I_high: 100 },
+//     { low: 71, high: 85, C_low: 71, C_high: 85, I_low: 101, I_high: 150 },
+//     { low: 86, high: 105, C_low: 86, C_high: 105, I_low: 151, I_high: 200 },
+//     { low: 106, high: 200, C_low: 106, C_high: 200, I_low: 201, I_high: 300 },
+//     { low: 201, high: 404, C_low: 201, C_high: 404, I_low: 301, I_high: 400 },
+//     { low: 405, high: 504, C_low: 405, C_high: 504, I_low: 401, I_high: 500 }
+//   ],
+//   pm2_5: [
+//     { low: 0, high: 12, C_low: 0, C_high: 12, I_low: 0, I_high: 50 },
+//     { low: 12.1, high: 35.4, C_low: 12.1, C_high: 35.4, I_low: 51, I_high: 100 },
+//     { low: 35.5, high: 55.4, C_low: 35.5, C_high: 55.4, I_low: 101, I_high: 150 },
+//     { low: 55.5, high: 150.4, C_low: 55.5, C_high: 150.4, I_low: 151, I_high: 200 },
+//     { low: 150.5, high: 250.4, C_low: 150.5, C_high: 250.4, I_low: 201, I_high: 300 },
+//     { low: 250.5, high: 350.4, C_low: 250.5, C_high: 350.4, I_low: 301, I_high: 400 },
+//     { low: 350.5, high: 500.4, C_low: 350.5, C_high: 500.4, I_low: 401, I_high: 500 }
+//   ],
+//   pm10: [
+//     { low: 0, high: 54, C_low: 0, C_high: 54, I_low: 0, I_high: 50 },
+//     { low: 55, high: 154, C_low: 55, C_high: 154, I_low: 51, I_high: 100 },
+//     { low: 155, high: 254, C_low: 155, C_high: 254, I_low: 101, I_high: 150 },
+//     { low: 255, high: 354, C_low: 255, C_high: 354, I_low: 151, I_high: 200 },
+//     { low: 355, high: 424, C_low: 355, C_high: 424, I_low: 201, I_high: 300 },
+//     { low: 425, high: 504, C_low: 425, C_high: 504, I_low: 301, I_high: 400 },
+//     { low: 505, high: 604, C_low: 505, C_high: 604, I_low: 401, I_high: 500 }
+//   ]
+// };
+
+// const calculateAQI = (concentration, breakpoints) => {
+//   for (let i = 0; i < breakpoints.length; i++) {
+//     const { low, high, C_low, C_high, I_low, I_high } = breakpoints[i];
+//     if (concentration >= low && concentration <= high) {
+//       return ((I_high - I_low) / (C_high - C_low)) * (concentration - C_low) + I_low;
+//     }
+//   }
+//   return null;
+// };

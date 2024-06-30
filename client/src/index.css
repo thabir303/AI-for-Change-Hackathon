@@ -1,3 +1,11 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* body {
+  @apply m-0 p-0 box-border overflow-hidden;
+} */
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -12,6 +20,122 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.app-container {
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.falling-text,
+.falling-subtext {
+  font-size: 4rem;
+  color: #00f7ff;
+  animation: fall 2s ease-out forwards, light-effect 3s infinite;
+  opacity: 0;
+  background: linear-gradient(90deg, rgba(204, 223, 227, 0.823), rgba(221, 164, 232, 0.856), rgba(194, 250, 233, 0.864));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+}
+
+.falling-subtext {
+  font-size: 2rem;
+  animation-delay: 1s;
+}
+
+.get-started-button {
+  position: relative;
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease;
+  border: 2px solid transparent;
+  z-index: 1;
+  overflow: hidden;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.get-started-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent, rgba(134, 243, 238, 0.878), transparent);
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  z-index: -1;
+}
+
+.get-started-button:hover::before {
+  opacity: 1;
+  animation: glow 1.5s linear infinite;
+}
+
+.get-started-button:hover {
+  background-color: #2563eb;
+}
+
+@keyframes glow {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes light-effect {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+/* //////// */
+
 
 a {
   font-weight: 500;

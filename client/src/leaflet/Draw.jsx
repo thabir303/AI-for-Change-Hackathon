@@ -11,6 +11,7 @@ import UseGeoLocation from "../hooks/UseGeoLocation";
 import DescriptionPage from "../component/DescriptionPage";
 import { Link } from "react-router-dom";
 import ChatBot from "../component/chatbot/ChatBot";
+// import './index.css';
 
 import markerIconPng from "../resources/images/marker.png";
 const markerIcon = new L.Icon({
@@ -28,14 +29,13 @@ const DrawMap = () => {
   const mapRef = useRef();
   const location = UseGeoLocation();
 
-  // Handle creation of shapes
   const handleShapeCreation = (e) => {
     const { layerType, layer } = e;
     if (layerType === "marker") {
       const newShape = {
         type: layerType,
         latlng: layer.getLatLng(),
-        placeName: "Place Name", // Replace with actual place name logic
+        placeName: "Place Name",
       };
       setShapes((prevShapes) => [...prevShapes, newShape]);
     } else if (layerType === "polygon" || layerType === "polyline") {
@@ -47,12 +47,10 @@ const DrawMap = () => {
     }
   };
 
-  // Handle clicking on a shape or marker
   const handleShapeClick = (shape) => {
     setSelectedShape(shape);
   };
 
-  // Render popup content for shapes
   const renderPopupContent = (shape) => {
     if (shape.type === "marker") {
       return (
@@ -84,7 +82,6 @@ const DrawMap = () => {
     }
   };
 
-  // Effect to set map center based on user location
   useEffect(() => {
     if (location.loaded && !location.error) {
       setCenter({
@@ -94,7 +91,6 @@ const DrawMap = () => {
     }
   }, [location]);
 
-  // Function to show user location on the map
   const showMyLocation = () => {
     if (location.loaded && !location.error) {
       const newShape = {
@@ -116,18 +112,17 @@ const DrawMap = () => {
     }
   };
 
-  // Function to handle marker click
   const handleMarkerClick = (shape) => {
     setSelectedShape(shape);
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: '#333', fontSize: '24px', marginBottom: '10px' }}>React-leaflet - Draw shapes on map</h2>
+    <div className="draw-map-container">
+      <div className="header">
+        <h2>React-leaflet - Draw shapes on map</h2>
       </div>
-      <div style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
-        <MapContainer center={center} zoom={ZOOM_LEVEL} ref={mapRef} style={{ height: "70vh", width: "100%" }}>
+      <div className="map-wrapper">
+        <MapContainer center={center} zoom={ZOOM_LEVEL} ref={mapRef} className="map-container">
           <FeatureGroup>
             <EditControl
               position="topright"
@@ -141,7 +136,6 @@ const DrawMap = () => {
                 polygon: true,
               }}
             />
-            {/* Render shapes */}
             {shapes.map((shape, index) => (
               <React.Fragment key={index}>
                 {shape.type === "marker" && (
@@ -166,7 +160,6 @@ const DrawMap = () => {
             url={osm.maptiler.url}
             attribution={osm.maptiler.attribution}
           />
-          {/* Show user location marker if loaded and no error */}
           {location.loaded && !location.error && (
             <Marker
               icon={markerIcon}
@@ -187,7 +180,7 @@ const DrawMap = () => {
       </div>
 
       {selectedShape && selectedShape.placeName !== "Your Location" && (
-        <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '8px' }}>
+        <div className="description-section">
           <DescriptionPage
             lat={selectedShape.latlng ? selectedShape.latlng.lat : null}
             lng={selectedShape.latlng ? selectedShape.latlng.lng : null}
@@ -195,30 +188,16 @@ const DrawMap = () => {
         </div>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <div className="locate-button-container">
         <button 
           onClick={showMyLocation}
-          style={{
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            padding: '10px 20px',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            fontSize: '16px',
-            transition: 'background-color 0.3s'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
+          className="locate-button"
         >
           Locate Me <FontAwesomeIcon icon={faGlobe} />
         </button>
       </div>
       
-      <div style={{ marginTop: '20px' }}>
+      <div className="chatbot-section">
         <ChatBot />
       </div>
     </div>

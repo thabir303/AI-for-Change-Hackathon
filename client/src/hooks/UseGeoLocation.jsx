@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+//hooks/UseGeoLocation.jsx
+import { useState, useEffect } from "react";
 
 const UseGeoLocation = () => {
     const [location, setLocation] = useState({

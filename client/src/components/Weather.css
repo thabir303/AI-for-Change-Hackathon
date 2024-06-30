@@ -1,0 +1,141 @@
+:root {
+  --primary: #0070f3;
+  --secondary: #f0f0f0;
+  --destructive: #ff4136;
+  --background: #ffffff;
+  --foreground: #000000;
+  --muted: #6c757d;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--secondary);
+  border-radius: 0.25rem;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button svg {
+  margin-right: 0.5rem;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.alert-destructive {
+  background-color: var(--destructive);
+  color: white;
+}
+
+.alert-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.card {
+  background-color: var(--background);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--secondary);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.forecast-item {
+  background-color: var(--secondary);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.health-recommendation {
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

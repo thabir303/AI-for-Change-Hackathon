@@ -18,6 +18,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<DrawMap/>}/>
           <Route path="/map_description/:lat/:lng" element={<DescriptionPage/>}/>

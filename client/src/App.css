@@ -40,3 +40,198 @@
 .read-the-docs {
   color: #888;
 }
+
+
+
+.container {
+  max-width: 1400px; /* Increased from 1200px */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Global Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+/* Map Container Styles */
+.map-container {
+  height: 85vh; /* Increased from 70vh to 85vh */
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Description Page Styles */
+.description-page {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.description-page h2 {
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.weather-info,
+.air-pollution-info,
+.soil-info {
+  background-color: #ecf0f1;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.weather-info h3,
+.air-pollution-info h3,
+.soil-info h3 {
+  color: #3498db;
+}
+
+/* Error Message Styles */
+.error {
+  color: #e74c3c;
+  background-color: #fadbd8;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .map-container {
+    height: 50vh;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Leaflet Overrides */
+.leaflet-container {
+  font: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 5px;
+}
+
+.leaflet-popup-content {
+  margin: 15px;
+}
+
+/* ChatBot Styles */
+.chatbot-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.chatbot-messages {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.chatbot-input {
+  display: flex;
+}
+
+.chatbot-input input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 5px;
+}
+
+.chatbot-input button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.chatbot-input button:hover {
+  background-color: #2980b9;
+}
+
+/* Health Recommendation Styles */
+.health-recommendation {
+  background-color: #e8f5e9;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+  border-left: 5px solid #4caf50;
+}
+
+.health-recommendation h4 {
+  color: #2e7d32;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.health-recommendation p {
+  margin: 5px 0;
+}
+
+.health-recommendation strong {
+  color: #1b5e20;
+}
