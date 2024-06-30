@@ -10,6 +10,7 @@ import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import UseGeoLocation from "../hooks/UseGeoLocation";
 import DescriptionPage from "../component/DescriptionPage";
 import { Link } from "react-router-dom"; // Ensure Link is imported correctly
+import ChatBot from "../component/chatbot/ChatBot";
 
 // Define marker icon
 import markerIconPng from "../resources/images/marker.png";
@@ -202,7 +203,9 @@ const DrawMap = () => {
           </button>
         </div>
       </div>
+      <ChatBot></ChatBot>
     </div>
+    
   );
 };
 

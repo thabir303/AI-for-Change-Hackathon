@@ -9,28 +9,48 @@ exports.getWeatherData = async (req, res, next) => {
 
   try {
     const apiKey = process.env.OPENWEATHER_API_KEY;
+    if (!apiKey) {
+      throw new Error('OPENWEATHER_API_KEY is not set in environment variables');
+    }
+
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
     const airPollutionUrl = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-    const soilUrl = `http://api.agromonitoring.com/agro/1.0/soil?lat=${lat}&lon=${lon}&appid=55756670624b916339a71119fbbb184d`;
+    const soilUrl = `http://api.agromonitoring.com/agro/1.0/soil?lat=${lat}&lon=${lon}&appid=6b99302450805cc2d739d478c4332775`;
 
-    const weatherResponse = await axios.get(weatherUrl);
-    const airPollutionResponse = await axios.get(airPollutionUrl);
-    const soilResponse = await axios.get(soilUrl);
+    const [weatherResponse, airPollutionResponse, soilResponse] = await Promise.all([
+      axios.get(weatherUrl),
+      axios.get(airPollutionUrl),
+      axios.get(soilUrl),
+    ]);
 
     const weatherData = weatherResponse.data;
     const airPollutionData = airPollutionResponse.data;
     const soilData = soilResponse.data;
 
     // Fetch historical weather data for the current month
-    const now = new Date();
-    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    const month = startDate.toLocaleString('default', { month: 'long' });
-    const year = startDate.getFullYear();
+ // Use a past date for demonstration (e.g., last month)
+const now = new Date();
+now.setMonth(now.getMonth() - 1); // Go back one month
 
-    const historicalWeatherUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature`;
+const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of the month
+
+const month = startDate.toLocaleString('default', { month: 'long' });
+const year = startDate.getFullYear();
+
+const formatDate = (date) => date.toISOString().split('T')[0];
+
+const historicalWeatherUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${formatDate(startDate)}&end_date=${formatDate(endDate)}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature`;
+
+console.log('Historical weather URL:', historicalWeatherUrl);
+console.log('Start date:', formatDate(startDate));
+console.log('End date:', formatDate(endDate));
+   console.log('Historical weather URL:', historicalWeatherUrl);
     const historicalWeatherResponse = await axios.get(historicalWeatherUrl);
     const historicalWeatherData = historicalWeatherResponse.data;
+
+    console.log('Start date:', startDate.toISOString().split('T')[0]);
+console.log('End date:', endDate.toISOString().split('T')[0]);
 
     let maxTemp = -Infinity;
     let minTemp = Infinity;
@@ -39,8 +59,11 @@ exports.getWeatherData = async (req, res, next) => {
     let count = 0;
 
     if (historicalWeatherData.hourly) {
+      console.log('Processing historical data...');
       historicalWeatherData.hourly.temperature_2m.forEach((temp, index) => {
-        if (temp !== null) { // Check if temperature data is available
+        if (temp !== null) {
+          console.log(`Processing temperature: ${temp}`);
+
           if (temp > maxTemp) maxTemp = temp;
           if (temp < minTemp) minTemp = temp;
 
@@ -49,7 +72,9 @@ exports.getWeatherData = async (req, res, next) => {
           count++;
         }
       });
-    }
+    } else {  console.log('No historical weather data available');
+      console.log('historicalWeatherData:', JSON.stringify(historicalWeatherData, null, 2));
+        }
 
     const avgHumidity = totalHumidity / count;
     const avgFeelsLikeTemp = totalFeelsLikeTemp / count;
@@ -65,15 +90,20 @@ exports.getWeatherData = async (req, res, next) => {
         avgHumidity: isNaN(avgHumidity) ? null : avgHumidity,
         avgFeelsLikeTemp: isNaN(avgFeelsLikeTemp) ? null : avgFeelsLikeTemp,
         month,
-        year
+        year,
       },
-      airPollution: airPollutionData.list[0].components,
+      airPollution: airPollutionData.list[0]?.components,
       soil: {
         moisture: soilData.moisture,
-        temp: soilData.t0
-      }
+        temp: soilData.t0,
+      },
     });
   } catch (error) {
-    next(error);
+    console.error('Error fetching weather data:', error);
+    res.status(500).json({ error: 'Failed to fetch weather data' });
   }
 };
+
+
+
+

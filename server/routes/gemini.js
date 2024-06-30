@@ -1,7 +1,8 @@
-const express = require ("express");
+const express = require('express');
 const router = express.Router();
-const geminicontroller = require("../controllers/gemini")
+const geminiController = require('../controllers/gemini');
 
-router.route("/generate").post(geminicontroller.generateResponse);
+router.post('/generate', geminiController.generateResponse);
+router.post('/chat', geminiController.handleChat);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Gemini from "./Geimini"
+import Gemini from "./Gemini";
 
 const DescriptionPage = () => {
   const { lat, lng } = useParams();
@@ -24,65 +24,93 @@ const DescriptionPage = () => {
     };
 
     fetchWeather();
-
-    // Clean-up function (optional)
-    return () => {
-      // Any clean-up code goes here, if needed
-    };
   }, [lat, lng]);
+
+  const generatePrompt = () => {
+    let prompt = '';
+
+    if (weather) {
+      prompt += `Weather Information:\n`;
+      prompt += `City: ${weather.city}\n`;
+      prompt += `Temperature: ${weather.temperature}°C\n`;
+      prompt += `Humidity: ${weather.humidity}%\n`;
+      prompt += `Description: ${weather.description}\n`;
+      prompt += `Max Temp for ${weather.month} ${weather.year}: ${weather.maxTemp !== null ? `${weather.maxTemp}°C` : 'N/A'}\n`;
+      prompt += `Min Temp for ${weather.month} ${weather.year}: ${weather.minTemp !== null ? `${weather.minTemp}°C` : 'N/A'}\n`;
+      prompt += `Average Humidity for ${weather.month} ${weather.year}: ${weather.avgHumidity !== null ? `${weather.avgHumidity}%` : 'N/A'}\n`;
+      prompt += `Average Feels Like Temp for ${weather.month} ${weather.year}: ${weather.avgFeelsLikeTemp !== null ? `${weather.avgFeelsLikeTemp}°C` : 'N/A'}\n\n`;
+    }
+
+    if (airPollution) {
+      prompt += `Air Pollution Information:\n`;
+      prompt += `CO: ${airPollution.co} μg/m³\n`;
+      prompt += `NO: ${airPollution.no} μg/m³\n`;
+      prompt += `NO2: ${airPollution.no2} μg/m³\n`;
+      prompt += `O3: ${airPollution.o3} μg/m³\n`;
+      prompt += `SO2: ${airPollution.so2} μg/m³\n`;
+      prompt += `PM2.5: ${airPollution.pm2_5} μg/m³\n`;
+      prompt += `PM10: ${airPollution.pm10} μg/m³\n`;
+      prompt += `NH3: ${airPollution.nh3} μg/m³\n\n`;
+    }
+
+    if (soil) {
+      prompt += `Soil Data:\n`;
+      prompt += `Moisture: ${soil.moisture}\n`;
+      prompt += `Temperature: ${(soil.temp - 273).toFixed(2)}°C\n`;
+    }
+
+    return prompt;
+  };
+
+  const prompt = generatePrompt();
 
   return (
     <>
-    <div className="description-page">
-      <h2>Description Page</h2>
-      <p><strong>Latitude:</strong> {lat}</p>
-      <p><strong>Longitude:</strong> {lng}</p>
+      <div className="description-page">
+        <h2>Description Page</h2>
+        <p><strong>Latitude:</strong> {lat}</p>
+        <p><strong>Longitude:</strong> {lng}</p>
 
-      {weather && (
-        <div className="weather-info">
-          <h3>Weather Information</h3>
-          <h2>{weather.city}</h2>
-          <p>Temperature: {weather.temperature}°C</p>
-          <p>Humidity: {weather.humidity}%</p>
-          <p>Description: {weather.description}</p>
-          <p>Max Temp for {weather.month} {weather.year}: {weather.maxTemp !== null ? `${weather.maxTemp}°C` : 'N/A'}</p>
-          <p>Min Temp for {weather.month} {weather.year}: {weather.minTemp !== null ? `${weather.minTemp}°C` : 'N/A'}</p>
-          <p>Average Humidity for {weather.month} {weather.year}: {weather.avgHumidity !== null ? `${weather.avgHumidity}%` : 'N/A'}</p>
-          <p>Average Feels Like Temp for {weather.month} {weather.year}: {weather.avgFeelsLikeTemp !== null ? `${weather.avgFeelsLikeTemp}°C` : 'N/A'}</p>
-  {/* Add more weather-related information as needed */}
-        </div>
-      )}
+        {weather && (
+          <div className="weather-info">
+            <h3>Weather Information</h3>
+            <h2>{weather.city}</h2>
+            <p>Temperature: {weather.temperature}°C</p>
+            <p>Humidity: {weather.humidity}%</p>
+            <p>Description: {weather.description}</p>
+            <p>Max Temp for {weather.month} {weather.year}: {weather.maxTemp !== null ? `${weather.maxTemp}°C` : 'N/A'}</p>
+            <p>Min Temp for {weather.month} {weather.year}: {weather.minTemp !== null ? `${weather.minTemp}°C` : 'N/A'}</p>
+            <p>Average Humidity for {weather.month} {weather.year}: {weather.avgHumidity !== null ? `${weather.avgHumidity}%` : 'N/A'}</p>
+            <p>Average Feels Like Temp for {weather.month} {weather.year}: {weather.avgFeelsLikeTemp !== null ? `${weather.avgFeelsLikeTemp}°C` : 'N/A'}</p>
+          </div>
+        )}
 
-      {airPollution && (
-        <div className="air-pollution-info">
-          <h3>Air Pollution Information</h3>
-          <p>CO: {airPollution.co} μg/m³</p>
-          <p>NO: {airPollution.no} μg/m³</p>
-          <p>NO2: {airPollution.no2} μg/m³</p>
-          <p>O3: {airPollution.o3} μg/m³</p>
-          <p>SO2: {airPollution.so2} μg/m³</p>
-          <p>PM2.5: {airPollution.pm2_5} μg/m³</p>
-          <p>PM10: {airPollution.pm10} μg/m³</p>
-          <p>NH3: {airPollution.nh3} μg/m³</p>
+        {airPollution && (
+          <div className="air-pollution-info">
+            <h3>Air Pollution Information</h3>
+            <p>CO: {airPollution.co} μg/m³</p>
+            <p>NO: {airPollution.no} μg/m³</p>
+            <p>NO2: {airPollution.no2} μg/m³</p>
+            <p>O3: {airPollution.o3} μg/m³</p>
+            <p>SO2: {airPollution.so2} μg/m³</p>
+            <p>PM2.5: {airPollution.pm2_5} μg/m³</p>
+            <p>PM10: {airPollution.pm10} μg/m³</p>
+            <p>NH3: {airPollution.nh3} μg/m³</p>
+          </div>
+        )}
 
-          {/* Add more air pollution-related information as needed */}
-        </div>
-      )}
+        {soil && (
+          <div className="soil-info">
+            <h3>Soil Data</h3>
+            <p>Moisture: {soil.moisture}</p>
+            <p>Temperature: {(soil.temp - 273).toFixed(2)}°C</p>
+          </div>
+        )}
 
-      {soil && (
-        <div className="soil-info">
-          <h3>Soil Data</h3>
-          <p>Moisture: {soil.moisture}</p>
-          <p>Temperature: {soil.temp - 273}°C</p>
-          {/* Add more soil-related information as needed */}
-        </div>
-      )}
-
-      {error && <p className="error">{error}</p>}
-    </div>
-    <Gemini></Gemini>
+        {error && <p className="error">{error}</p>}
+      </div>
+      <Gemini dataprompt={prompt} />
     </>
-
   );
 };
 
