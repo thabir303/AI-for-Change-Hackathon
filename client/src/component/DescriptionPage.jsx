@@ -32,7 +32,7 @@ const DescriptionPage = () => {
     if (weather) {
       prompt += `Weather Information:\n`;
       prompt += `City: ${weather.city}\n`;
-      prompt += `Temperature: ${weather.temperature}°C\n`;
+      prompt += `Temperature: ${(weather.temperature - 273.15).toFixed(2)}°C\n`;
       prompt += `Humidity: ${weather.humidity}%\n`;
       prompt += `Description: ${weather.description}\n`;
       prompt += `Max Temp for ${weather.month} ${weather.year}: ${weather.maxTemp !== null ? `${weather.maxTemp}°C` : 'N/A'}\n`;
@@ -43,20 +43,23 @@ const DescriptionPage = () => {
 
     if (airPollution) {
       prompt += `Air Pollution Information:\n`;
-      prompt += `CO: ${airPollution.co} μg/m³\n`;
-      prompt += `NO: ${airPollution.no} μg/m³\n`;
-      prompt += `NO2: ${airPollution.no2} μg/m³\n`;
-      prompt += `O3: ${airPollution.o3} μg/m³\n`;
-      prompt += `SO2: ${airPollution.so2} μg/m³\n`;
-      prompt += `PM2.5: ${airPollution.pm2_5} μg/m³\n`;
-      prompt += `PM10: ${airPollution.pm10} μg/m³\n`;
-      prompt += `NH3: ${airPollution.nh3} μg/m³\n\n`;
+      prompt += `AQI: ${airPollution.aqi}\n`;
+      prompt += `Dominant Pollutant: ${airPollution.dominantPollutant}\n`;
+      prompt += `Category: ${airPollution.category}\n`;
+      prompt += `CO: ${airPollution.components.co} μg/m³\n`;
+      prompt += `NO: ${airPollution.components.no} μg/m³\n`;
+      prompt += `NO2: ${airPollution.components.no2} μg/m³\n`;
+      prompt += `O3: ${airPollution.components.o3} μg/m³\n`;
+      prompt += `SO2: ${airPollution.components.so2} μg/m³\n`;
+      prompt += `PM2.5: ${airPollution.components.pm2_5} μg/m³\n`;
+      prompt += `PM10: ${airPollution.components.pm10} μg/m³\n`;
+      prompt += `NH3: ${airPollution.components.nh3} μg/m³\n\n`;
     }
 
     if (soil) {
       prompt += `Soil Data:\n`;
       prompt += `Moisture: ${soil.moisture}\n`;
-      prompt += `Temperature: ${(soil.temp - 273).toFixed(2)}°C\n`;
+      prompt += `Temperature: ${(soil.temp - 273.15).toFixed(2)}°C\n`;
     }
 
     return prompt;
@@ -75,7 +78,7 @@ const DescriptionPage = () => {
           <div className="weather-info">
             <h3>Weather Information</h3>
             <h2>{weather.city}</h2>
-            <p>Temperature: {weather.temperature}°C</p>
+            <p>Temperature: {(weather.temperature - 273.15).toFixed(2)}°C</p>
             <p>Humidity: {weather.humidity}%</p>
             <p>Description: {weather.description}</p>
             <p>Max Temp for {weather.month} {weather.year}: {weather.maxTemp !== null ? `${weather.maxTemp}°C` : 'N/A'}</p>
@@ -88,14 +91,17 @@ const DescriptionPage = () => {
         {airPollution && (
           <div className="air-pollution-info">
             <h3>Air Pollution Information</h3>
-            <p>CO: {airPollution.co} μg/m³</p>
-            <p>NO: {airPollution.no} μg/m³</p>
-            <p>NO2: {airPollution.no2} μg/m³</p>
-            <p>O3: {airPollution.o3} μg/m³</p>
-            <p>SO2: {airPollution.so2} μg/m³</p>
-            <p>PM2.5: {airPollution.pm2_5} μg/m³</p>
-            <p>PM10: {airPollution.pm10} μg/m³</p>
-            <p>NH3: {airPollution.nh3} μg/m³</p>
+            <p>AQI: {airPollution.aqi}</p>
+            <p>Dominant Pollutant: {airPollution.dominantPollutant}</p>
+            <p>Category: {airPollution.category}</p>
+            <p>CO: {airPollution.components.co} μg/m³</p>
+            <p>NO: {airPollution.components.no} μg/m³</p>
+            <p>NO2: {airPollution.components.no2} μg/m³</p>
+            <p>O3: {airPollution.components.o3} μg/m³</p>
+            <p>SO2: {airPollution.components.so2} μg/m³</p>
+            <p>PM2.5: {airPollution.components.pm2_5} μg/m³</p>
+            <p>PM10: {airPollution.components.pm10} μg/m³</p>
+            <p>NH3: {airPollution.components.nh3} μg/m³</p>
           </div>
         )}
 
@@ -103,7 +109,7 @@ const DescriptionPage = () => {
           <div className="soil-info">
             <h3>Soil Data</h3>
             <p>Moisture: {soil.moisture}</p>
-            <p>Temperature: {(soil.temp - 273).toFixed(2)}°C</p>
+            <p>Temperature: {(soil.temp - 273.15).toFixed(2)}°C</p>
           </div>
         )}
 
