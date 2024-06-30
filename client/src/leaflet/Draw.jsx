@@ -9,10 +9,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import UseGeoLocation from "../hooks/UseGeoLocation";
 import DescriptionPage from "../component/DescriptionPage";
-import { Link } from "react-router-dom"; // Ensure Link is imported correctly
+import { Link } from "react-router-dom";
 import ChatBot from "../component/chatbot/ChatBot";
 
-// Define marker icon
 import markerIconPng from "../resources/images/marker.png";
 const markerIcon = new L.Icon({
   iconUrl: markerIconPng,
@@ -107,7 +106,6 @@ const DrawMap = () => {
         placeName: "Your Location",
       };
       setShapes((prevShapes) => [...prevShapes, newShape]);
-      setSelectedShape(newShape);
       mapRef.current.setView(
         [location.coordinates.lat, location.coordinates.lng],
         ZOOM_LEVEL,
@@ -124,88 +122,106 @@ const DrawMap = () => {
   };
 
   return (
-    <div className="row">
-      <div className="col text-center">
-        <h2>React-leaflet - Draw shapes on map</h2>
-        <div className="col">
-          <MapContainer center={center} zoom={ZOOM_LEVEL} ref={mapRef} style={{ height: "80vh", width: "100%" }}>
-            <FeatureGroup>
-              <EditControl
-                position="topright"
-                onCreated={handleShapeCreation}
-                draw={{
-                  circle: false,
-                  circlemarker: false,
-                  rectangle: false,
-                  marker: true,
-                  polyline: true,
-                  polygon: true,
-                }}
-              />
-              {/* Render shapes */}
-              {shapes.map((shape, index) => (
-                <React.Fragment key={index}>
-                  {shape.type === "marker" && (
-                    <Marker position={shape.latlng} eventHandlers={{ click: () => handleMarkerClick(shape) }}>
-                      <Popup>{renderPopupContent(shape)}</Popup>
-                    </Marker>
-                  )}
-                  {shape.type === "polygon" && (
-                    <Polygon positions={shape.latlngs}>
-                      <Popup>{renderPopupContent(shape)}</Popup>
-                    </Polygon>
-                  )}
-                  {shape.type === "polyline" && (
-                    <Polyline positions={shape.latlngs}>
-                      <Popup>{renderPopupContent(shape)}</Popup>
-                    </Polyline>
-                  )}
-                </React.Fragment>
-              ))}
-            </FeatureGroup>
-            <TileLayer
-              url={osm.maptiler.url}
-              attribution={osm.maptiler.attribution}
+    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <h2 style={{ color: '#333', fontSize: '24px', marginBottom: '10px' }}>React-leaflet - Draw shapes on map</h2>
+      </div>
+      <div style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
+        <MapContainer center={center} zoom={ZOOM_LEVEL} ref={mapRef} style={{ height: "70vh", width: "100%" }}>
+          <FeatureGroup>
+            <EditControl
+              position="topright"
+              onCreated={handleShapeCreation}
+              draw={{
+                circle: false,
+                circlemarker: false,
+                rectangle: false,
+                marker: true,
+                polyline: true,
+                polygon: true,
+              }}
             />
-            {/* Show user location marker if loaded and no error */}
-            {location.loaded && !location.error && (
-              <Marker
-                icon={markerIcon}
-                position={[location.coordinates.lat, location.coordinates.lng]}
-                eventHandlers={{ click: () => handleMarkerClick({
-                  type: "marker",
-                  latlng: {
-                    lat: location.coordinates.lat,
-                    lng: location.coordinates.lng,
-                  },
-                  placeName: "Your Location",
-                }) }}
-              >
-                <Popup>Your Location</Popup>
-              </Marker>
-            )}
-          </MapContainer>
-        </div>
+            {/* Render shapes */}
+            {shapes.map((shape, index) => (
+              <React.Fragment key={index}>
+                {shape.type === "marker" && (
+                  <Marker position={shape.latlng} eventHandlers={{ click: () => handleMarkerClick(shape) }}>
+                    <Popup>{renderPopupContent(shape)}</Popup>
+                  </Marker>
+                )}
+                {shape.type === "polygon" && (
+                  <Polygon positions={shape.latlngs}>
+                    <Popup>{renderPopupContent(shape)}</Popup>
+                  </Polygon>
+                )}
+                {shape.type === "polyline" && (
+                  <Polyline positions={shape.latlngs}>
+                    <Popup>{renderPopupContent(shape)}</Popup>
+                  </Polyline>
+                )}
+              </React.Fragment>
+            ))}
+          </FeatureGroup>
+          <TileLayer
+            url={osm.maptiler.url}
+            attribution={osm.maptiler.attribution}
+          />
+          {/* Show user location marker if loaded and no error */}
+          {location.loaded && !location.error && (
+            <Marker
+              icon={markerIcon}
+              position={[location.coordinates.lat, location.coordinates.lng]}
+              eventHandlers={{ click: () => handleMarkerClick({
+                type: "marker",
+                latlng: {
+                  lat: location.coordinates.lat,
+                  lng: location.coordinates.lng,
+                },
+                placeName: "Your Location",
+              }) }}
+            >
+              <Popup>Your Location</Popup>
+            </Marker>
+          )}
+        </MapContainer>
       </div>
 
-      {/* Render DescriptionPage conditionally based on selectedShape */}
-      {selectedShape && (
-        <DescriptionPage
-          lat={selectedShape.latlng ? selectedShape.latlng.lat : null}
-          lng={selectedShape.latlng ? selectedShape.latlng.lng : null}
-        />
+      {selectedShape && selectedShape.placeName !== "Your Location" && (
+        <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '8px' }}>
+          <DescriptionPage
+            lat={selectedShape.latlng ? selectedShape.latlng.lat : null}
+            lng={selectedShape.latlng ? selectedShape.latlng.lng : null}
+          />
+        </div>
       )}
 
-      <div className="row my-4">
-        <div className="col d-flex justify-content-center">
-          <button className="btn btn-primary" onClick={showMyLocation}>
-            Locate Me <FontAwesomeIcon icon={faGlobe} />
-          </button>
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <button 
+          onClick={showMyLocation}
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '16px',
+            transition: 'background-color 0.3s'
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
+        >
+          Locate Me <FontAwesomeIcon icon={faGlobe} />
+        </button>
       </div>
-      <ChatBot></ChatBot>
+      
+      <div style={{ marginTop: '20px' }}>
+        <ChatBot />
+      </div>
     </div>
-    
   );
 };
 

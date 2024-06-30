@@ -1,5 +1,22 @@
 const axios = require('axios');
 
+function getHealthRecommendation(aqi) {
+  if (aqi <= 50) {
+    return { level: 'Good', recommendation: 'Air quality is considered satisfactory, and air pollution poses little or no risk.' };
+  } else if (aqi <= 100) {
+    return { level: 'Moderate', recommendation: 'Air quality is acceptable; however, there may be some health concern for a very small number of people who are unusually sensitive to air pollution.' };
+  } else if (aqi <= 150) {
+    return { level: 'Unhealthy for Sensitive Groups', recommendation: 'Members of sensitive groups may experience health effects. The general public is not likely to be affected.' };
+  } else if (aqi <= 200) {
+    return { level: 'Unhealthy', recommendation: 'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.' };
+  } else if (aqi <= 300) {
+    return { level: 'Very Unhealthy', recommendation: 'Health alert: everyone may experience more serious health effects.' };
+  } else {
+    return { level: 'Hazardous', recommendation: 'Health warnings of emergency conditions. The entire population is more likely to be affected.' };
+  }
+}
+
+
 exports.getWeatherData = async (req, res, next) => {
   const { lat, lon } = req.query;
 
@@ -12,6 +29,9 @@ exports.getWeatherData = async (req, res, next) => {
     if (!apiKey) {
       throw new Error('OPENWEATHER_API_KEY is not set in environment variables');
     }
+    const googleApiKey = process.env.GOOGLE_API_KEY;
+    const weatherUrl2 = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=1500&type=weather&key=${googleApiKey}`;
+    const airPollutionUrl2 = `https://airquality.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}`;
 
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
     const airPollutionUrl = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -23,6 +43,57 @@ exports.getWeatherData = async (req, res, next) => {
       axios.get(soilUrl),
     ]);
 
+    //adf
+
+    const [weatherResponse2, airPollutionResponse2] = await Promise.all([
+      axios.get(weatherUrl2),
+      axios.post(airPollutionUrl2, {
+        location: {
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lon)
+        }
+      })
+    ]);
+
+    if (!weatherResponse2.data.results.length) {
+      throw new Error('No weather data found for the provided coordinates.');
+    }
+
+    const weatherData2 = weatherResponse2.data;
+    const airPollutionData2 = airPollutionResponse2.data;
+
+    console.log('Air Pollution Data:', airPollutionData2);
+
+    // Extract AQI information from the response
+    const aqiInfo = airPollutionData2.indexes.find(index => index.code === "uaqi");
+
+    // Create a simplified pollutants obje2ct
+    const simplifiedPollutants = {
+      aqi: aqiInfo.aqi,
+      dominantPollutant: aqiInfo.dominantPollutant,
+      category: aqiInfo.category
+    };
+
+    console.log('Simplified Pollutants:', simplifiedPollutants);
+
+    // We're not calculating AQI here as it's 
+    const healthRecommendation = getHealthRecommendation(aqiInfo.aqi);
+
+    res.json({
+      weather: {
+        city: weatherData2.results[0].name,
+        temperature: weatherData2.results[0].geometry.location.lat, // Replace with actual temperature field
+        humidity: weatherData2.results[0].geometry.location.lng, // Replace with actual humidity field
+        description: weatherData2.results[0].vicinity // Replace with actual weather description field
+      },
+      airPollution: simplifiedPollutants,
+      healthRecommendation: healthRecommendation,
+      dateTime: airPollutionData2.dateTime,
+      regionCode: airPollutionData2.regionCode
+
+    });
+
+    //dsvf
     const weatherData = weatherResponse.data;
     const airPollutionData = airPollutionResponse.data;
     const soilData = soilResponse.data;
@@ -102,7 +173,15 @@ console.log('End date:', endDate.toISOString().split('T')[0]);
     console.error('Error fetching weather data:', error);
     res.status(500).json({ error: 'Failed to fetch weather data' });
   }
+  
 };
+
+
+
+//dfsgfshbgh
+
+
+
 
 
 
