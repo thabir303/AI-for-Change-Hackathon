@@ -96,4 +96,3 @@ Our goal is to reduce urban temperatures and demonstrate the efficacy of our sol
 - **Communication:** Google Meet
 - **Documentation:** Google Docs
 
-We welcome contributions and feedback to make Project CoolCity even more effective. Please refer to our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to get involved.
