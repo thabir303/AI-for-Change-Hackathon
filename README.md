@@ -96,3 +96,41 @@ Our goal is to reduce urban temperatures and demonstrate the efficacy of our sol
 - **Communication:** Google Meet
 - **Documentation:** Google Docs
 
+## Setup and Deployment
+
+### Prerequisites
+
+Ensure you have Docker and Docker Compose installed on your machine.
+
+- [Docker Installation Guide](https://docs.docker.com/get-docker/)
+- [Docker Compose Installation Guide](https://docs.docker.com/compose/install/)
+
+### Docker Compose Setup
+
+The project uses Docker Compose to manage and run the services. The `docker-compose.yml` file is structured as follows:
+
+```yaml
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+    environment:
+      - NODE_ENV=development
