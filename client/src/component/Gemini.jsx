@@ -1,5 +1,6 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import './Gemini.css';
 
 function Gemini({ dataPrompt }) {
@@ -79,5 +80,9 @@ function Gemini({ dataPrompt }) {
     </div>
   );
 }
+
+Gemini.propTypes = {
+  dataPrompt: PropTypes.string.isRequired
+};
 
 export default Gemini;

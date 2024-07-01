@@ -37,7 +37,7 @@ const Weather = () => {
 
   const fetchWeather = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/weather?lat=${lat}&lon=${lon}');
+      const response = await fetch('http://localhost:3000/api/weather?lat=${lat}&lon=${lon}');
       if (!response.ok) {
         throw new Error('Failed to fetch weather data');
       }
