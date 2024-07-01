@@ -96,41 +96,79 @@ Our goal is to reduce urban temperatures and demonstrate the efficacy of our sol
 - **Communication:** Google Meet
 - **Documentation:** Google Docs
 
-## Setup and Deployment
+## Docker Setup and User Manual
 
 ### Prerequisites
 
-Ensure you have Docker and Docker Compose installed on your machine.
+Make sure you have Docker and Docker Compose installed on your system. If not, you can download and install them from [Docker's official website](https://www.docker.com/products/docker-desktop).
 
-- [Docker Installation Guide](https://docs.docker.com/get-docker/)
-- [Docker Compose Installation Guide](https://docs.docker.com/compose/install/)
+### Setup Instructions
 
-### Docker Compose Setup
+1. Clone the repository:
 
-The project uses Docker Compose to manage and run the services. The `docker-compose.yml` file is structured as follows:
+    ```sh
+    git clone --branch main --single-branch https://github.com/thabir303/AI-for-Change-Hackathon.git
+    cd AI-for-Change-Hackathon
+    ```
 
-```yaml
-version: '3.8'
+2. Create a `.env` file in the root directory and configure the necessary environment variables:
 
-services:
-  backend:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./server:/app
-    environment:
-      - NODE_ENV=development
+    ```env
+    # Example .env file
+    API_KEY=
+    PORT=3000
+    OPENWEATHER_API_KEY=
+    AGROMONITORING_API_KEY=
+    OPENCAGE_API_KEY=
+    SESSION_SECRET=
+    GOOGLE_API_KEY=
+    ```
 
-  frontend:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./client:/app
-    environment:
-      - NODE_ENV=development
+3. Build and start the Docker containers:
+
+    ```sh
+    docker-compose up --build
+    ```
+
+    This command will build the Docker images for the backend and frontend services and start the containers.
+
+### Accessing the Application
+
+- **Frontend:** Open your browser and navigate to `http://localhost:5173` to access the frontend interface.
+- **Backend:** The backend service will be running on `http://localhost:3000`.
+
+### Stopping the Application
+
+To stop the running containers, use the following command:
+
+    ```sh
+    docker-compose down
+    ```
+
+### Development Workflow
+
+- Any changes made to the code in the `./server` and `./client` directories will be reflected in the running containers, thanks to the volume mounts specified in the `docker-compose.yml` file.
+
+### Troubleshooting
+
+- If you encounter any issues during setup or while running the application, check the container logs for more information:
+
+    ```sh
+    docker-compose logs
+    ```
+
+    This command will display the logs for all services defined in the `docker-compose.yml` file.
+
+### Project Structure
+
+- `./server`: Contains the backend code.
+- `./client`: Contains the frontend code.
+- `docker-compose.yml`: Defines the Docker services and configurations.
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details on how to get started.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
